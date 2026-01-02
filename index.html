@@ -23,9 +23,8 @@
         align-items: center;
         min-height: 100vh;
         margin: 0;
-        /* Changed overflow to auto so mobile users can scroll if needed */
         overflow-x: hidden; 
-        padding: 20px; /* Space for mobile screen edges */
+        padding: 20px; 
         box-sizing: border-box;
     }
 
@@ -36,9 +35,8 @@
 
     .container {
         border: 4px double var(--border);
-        padding: 30px; /* Slightly reduced padding for small screens */
+        padding: 30px; 
         width: 100%;
-        /* Responsive Width Logic */
         max-width: 400px; 
         background: rgba(255, 255, 255, 0.15);
         position: relative;
@@ -49,7 +47,7 @@
     .container::after {
         content: "By Shams Kabir (DIU_SWE_43)";
         position: absolute;
-        bottom: -35px; /* Pushed down slightly */
+        bottom: -35px;
         right: 0;
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.65rem;
@@ -66,7 +64,7 @@
         border-bottom: 1px solid var(--border);
         padding-bottom: 15px;
         margin-bottom: 30px;
-        font-size: 1.2rem; /* Slightly smaller for mobile */
+        font-size: 1.2rem; 
         font-weight: 700;
     }
 
@@ -76,18 +74,18 @@
         align-items: center;
         margin-bottom: 18px; 
         transition: transform 0.2s ease;
-        gap: 10px; /* Space between label and input */
+        gap: 10px; 
     }
 
     label { 
         font-size: 0.75rem; 
         font-weight: 700;
         text-transform: uppercase;
-        flex: 1; /* Allows label to take up remaining space */
+        flex: 1; 
     }
 
     input { 
-        width: 90px; /* Slightly narrower to fit better on small screens */
+        width: 90px; 
         padding: 8px; 
         border: 1px solid var(--border); 
         background: rgba(255, 255, 255, 0.2); 
@@ -98,7 +96,6 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Added Media Query for very small phones */
     @media (max-width: 360px) {
         .container { padding: 20px; }
         .grade-text { font-size: 2.2rem; }
@@ -178,7 +175,6 @@
 </div>
 
 <script>
-    // Enter key navigation
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             const currentElement = event.target;
@@ -238,10 +234,9 @@
         
         const resultCard = document.getElementById('resultCard');
         
-        // Trigger Stamp Animation only if the letter grade changes
         if (letterGrade !== lastGrade) {
             resultCard.classList.remove('stamped');
-            void resultCard.offsetWidth; // Force reflow
+            void resultCard.offsetWidth;
             resultCard.classList.add('stamped');
             lastGrade = letterGrade;
         }
@@ -253,3 +248,4 @@
 
 </body>
 </html>
+
