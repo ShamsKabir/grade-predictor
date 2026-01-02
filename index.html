@@ -88,6 +88,7 @@
     </div>
 
     <script>
+        let lastGrade = "";
         let savedCourses = [];
         let currentGP = 0;
 
@@ -101,18 +102,12 @@
         function calculateGrade() {
             const isInvalid = (id, max) => {
                 const val = parseFloat(document.getElementById(id).value);
-                // If the field is empty, we treat it as 0 (not invalid)
                 if (isNaN(val)) return false;
-                // If the value is below 0 or above the max, it is invalid
                 return val < 0 || val > max;
             };
 
-            // Define the limits for each field
-            const limits = {
-                at: 100, qz: 15, as: 5, md: 25, pr: 8, fn: 40
-            };
+            const limits = { at: 100, qz: 15, as: 5, md: 25, pr: 8, fn: 40 };
 
-            // Check all fields for invalid input
             let hasError = false;
             for (const [id, max] of Object.entries(limits)) {
                 if (isInvalid(id, max)) {
@@ -124,18 +119,15 @@
             const resultCard = document.getElementById("resultCard");
 
             if (hasError) {
-                // Stop calculation and show error state
                 document.getElementById("totalDisplay").innerText = "ERR";
                 document.getElementById("gradeDisplay").innerText = "INVALID";
                 document.getElementById("gpDisplay").innerText = "Check Input Limits";
-
                 resultCard.style.backgroundColor = "var(--red)";
                 resultCard.style.color = "#fff";
-                currentGP = 0; // Prevent saving invalid data
-                return; // Exit the function early
+                currentGP = 0;
+                return;
             }
 
-            // If valid, proceed with normal calculation
             const at = parseFloat(document.getElementById("at").value) || 0;
             const qz = parseFloat(document.getElementById("qz").value) || 0;
             const as = parseFloat(document.getElementById("as").value) || 0;
@@ -156,16 +148,20 @@
                 8: ["D", 2.0, "#a67c00"],
             };
 
-            if (bracket >= 16) {
-                [letter, gp, color] = grades[16];
-            } else if (grades[bracket]) {
-                [letter, gp, color] = grades[bracket];
-            }
+            if (bracket >= 16) { [letter, gp, color] = grades[16]; }
+            else if (grades[bracket]) { [letter, gp, color] = grades[bracket]; }
 
             currentGP = gp;
             document.getElementById("totalDisplay").innerText = total.toFixed(2);
             document.getElementById("gradeDisplay").innerText = letter;
             document.getElementById("gpDisplay").innerText = "Grade Point: " + gp.toFixed(2);
+
+            if (letter !== lastGrade) {
+                resultCard.classList.remove("stamped");
+                void resultCard.offsetWidth;
+                resultCard.classList.add("stamped");
+                lastGrade = letter;
+            }
 
             resultCard.style.backgroundColor = color;
             resultCard.style.color = "#fff";
