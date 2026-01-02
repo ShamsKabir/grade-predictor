@@ -3,133 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grade Predictor</title>
+    <title>Grade Predictor & CGPA Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-        --bg: #e8e2d2; 
-        --ink: #2c2c2c;
-        --border: #3d3d3d;
-    }
+            --bg: #e8e2d2; 
+            --ink: #2c2c2c;
+            --border: #3d3d3d;
+            --red: #8b0000;
+        }
 
-    body { 
-        background-color: var(--bg); 
-        font-family: 'Merriweather', serif; 
-        color: var(--ink);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        overflow-x: hidden; 
-        padding: 20px; 
-        box-sizing: border-box;
-    }
+        body { 
+            background-color: var(--bg); 
+            font-family: 'Merriweather', serif; 
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px; 
+            box-sizing: border-box;
+        }
 
-    @keyframes paperSlide {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+        .container {
+            border: 4px double var(--border);
+            padding: 30px; 
+            width: 100%;
+            max-width: 400px; 
+            background: rgba(255, 255, 255, 0.15);
+            position: relative;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
 
-    .container {
-        border: 4px double var(--border);
-        padding: 30px; 
-        width: 100%;
-        max-width: 400px; 
-        background: rgba(255, 255, 255, 0.15);
-        position: relative;
-        animation: paperSlide 0.8s ease-out;
-        box-sizing: border-box;
-    }
+        .container::after {
+            content: "By Shams Kabir (DIU_SWE_43)";
+            position: absolute; bottom: 3px; right: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem; opacity: 0.6;
+        }
 
-    .container::after {
-        content: "By Shams Kabir (DIU_SWE_43)";
-        position: absolute;
-        bottom: -35px;
-        right: 0;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.65rem;
-        opacity: 0.7;
-        letter-spacing: 0.5px;
-        filter: grayscale(1) contrast(1.5);
-        text-align: right;
-    }
+        h1 { text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 30px; font-size: 1.2rem; }
 
-    h1 { 
-        text-align: center; 
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 15px;
-        margin-bottom: 30px;
-        font-size: 1.2rem; 
-        font-weight: 700;
-    }
+        .input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; }
+        label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; flex: 1; }
+        input { width: 85px; padding: 6px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.2); font-family: 'Merriweather', serif; text-align: center; outline: none; }
+        
+        input:focus { background: rgba(255, 255, 255, 0.9); transform: scale(1.02); }
 
-    .input-group { 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 18px; 
-        transition: transform 0.2s ease;
-        gap: 10px; 
-    }
+        .btn-save {
+            width: 100%; padding: 12px; margin-top: 10px;
+            background: var(--ink); color: white;
+            border: none; font-family: 'JetBrains Mono';
+            cursor: pointer; text-transform: uppercase;
+            letter-spacing: 1px; font-weight: bold;
+        }
 
-    label { 
-        font-size: 0.75rem; 
-        font-weight: 700;
-        text-transform: uppercase;
-        flex: 1; 
-    }
+        .result-box { margin-top: 15px; padding: 15px; border: 1px solid var(--border); text-align: center; }
+        .grade-text { font-size: 2rem; font-weight: 700; margin: 5px 0; }
+        .total-text, .gp-text { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; margin: 2px; }
 
-    input { 
-        width: 90px; 
-        padding: 8px; 
-        border: 1px solid var(--border); 
-        background: rgba(255, 255, 255, 0.2); 
-        color: var(--ink); 
-        font-family: 'Merriweather', serif;
-        text-align: center;
-        outline: none;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    @media (max-width: 360px) {
-        .container { padding: 20px; }
-        .grade-text { font-size: 2.2rem; }
-        input { width: 70px; }
-    }
-
-    input:focus {
-        background: rgba(255, 255, 255, 0.9);
-        border-color: #000;
-        transform: scale(1.05);
-    }
-
-    @keyframes stamp {
-        0% { transform: scale(1.2); opacity: 0.5; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-
-    .result-box {
-        margin-top: 30px;
-        padding: 15px;
-        border: 1px solid var(--border);
-        text-align: center;
-        transition: background-color 0.6s ease, color 0.6s ease;
-    }
-
-    .stamped { animation: stamp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
-    .grade-text { font-size: 2.5rem; font-weight: 700; margin: 5px 0; line-height: 1; }
-    .total-text, .gp-text { font-size: 0.8rem; margin: 5px 0; text-transform: uppercase; font-weight: 700; }
-
-    input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+        .summary-container {
+            width: 100%; max-width: 400px;
+            background: #fff; border: 1px solid var(--border);
+            padding: 20px; box-sizing: border-box;
+            display: none;
+        }
+        .course-item { 
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.75rem; font-family: 'JetBrains Mono'; 
+            border-bottom: 1px dashed #ccc; padding: 8px 0;
+        }
+        .del-btn { 
+            color: var(--red); cursor: pointer; border: none; background: none; font-weight: bold; font-size: 1rem;
+        }
+        .cgpa-display {
+            margin-top: 15px; text-align: center;
+            font-size: 1.3rem; font-weight: bold;
+            color: #2a4d69; border-top: 2px solid var(--ink); padding-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -137,115 +92,137 @@
 <div class="container">
     <h1>Grade Predictor</h1>
 
-    <div class="input-group">
-        <label>Attendance %</label>
-        <input type="number" id="at" placeholder="Max 100" data-next="qz" oninput="calculateGrade()">
-    </div>
+    <div class="input-group"><label>Course ID</label><input type="text" id="courseID" data-next="credit"></div>
+    <div class="input-group"><label>Credits</label><input type="number" id="credit" data-next="at"></div>
 
-    <div class="input-group">
-        <label>Quiz Average</label>
-        <input type="number" id="qz" placeholder="Max 15" data-next="as" oninput="calculateGrade()">
-    </div>
-
-    <div class="input-group">
-        <label>Assignment</label>
-        <input type="number" id="as" placeholder="Max 5" data-next="md" oninput="calculateGrade()">
-    </div>
-
-    <div class="input-group">
-        <label>Midterm</label>
-        <input type="number" id="md" placeholder="Max 25" data-next="pr" oninput="calculateGrade()">
-    </div>
-
-    <div class="input-group">
-        <label>Presentation</label>
-        <input type="number" id="pr" placeholder="Max 8" data-next="fn" oninput="calculateGrade()">
-    </div>
-
-    <div class="input-group">
-        <label>Final Exam</label>
-        <input type="number" id="fn" placeholder="Max 40" oninput="calculateGrade()">
-    </div>
+    <div class="input-group"><label>Attendance %</label><input type="number" id="at" data-next="qz" oninput="calculateGrade()"></div>
+    <div class="input-group"><label>Quiz Avg</label><input type="number" id="qz" data-next="as" oninput="calculateGrade()"></div>
+    <div class="input-group"><label>Assignment</label><input type="number" id="as" data-next="md" oninput="calculateGrade()"></div>
+    <div class="input-group"><label>Midterm</label><input type="number" id="md" data-next="pr" oninput="calculateGrade()"></div>
+    <div class="input-group"><label>Presentation</label><input type="number" id="pr" data-next="fn" oninput="calculateGrade()"></div>
+    <div class="input-group"><label>Final Exam</label><input type="number" id="fn" oninput="calculateGrade()"></div>
 
     <div id="resultCard" class="result-box">
         <p class="total-text">Total Score: <span id="totalDisplay">0.00</span></p>
         <p class="grade-text" id="gradeDisplay">--</p>
         <p class="gp-text" id="gpDisplay">Grade Point: 0.00</p>
     </div>
+
+    <button class="btn-save" onclick="saveCourse()">Save Course</button>
+</div>
+
+<div id="summaryCard" class="summary-container">
+    <h3 style="text-align:center; margin-top:0; font-size: 1rem;">SESSION SUMMARY</h3>
+    <div id="courseList"></div>
+    <div class="cgpa-display" id="cgpaDisplay">CGPA: 0.00</div>
+    <button onclick="location.reload()" style="width:100%; margin-top:15px; font-size:0.7rem; cursor:pointer; padding: 5px;">Clear Session</button>
 </div>
 
 <script>
+    let savedCourses = [];
+    let currentGP = 0;
+
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
-            const currentElement = event.target;
-            const nextId = currentElement.getAttribute('data-next');
-            if (nextId) {
-                const nextElement = document.getElementById(nextId);
-                if (nextElement) nextElement.focus();
-            }
+            const nextId = event.target.getAttribute('data-next');
+            if (nextId) document.getElementById(nextId).focus();
         }
     });
 
-    let lastGrade = "";
-
     function calculateGrade() {
-        const atPercent = parseFloat(document.getElementById('at').value) || 0;
+        const at = parseFloat(document.getElementById('at').value) || 0;
         const qz = parseFloat(document.getElementById('qz').value) || 0;
         const as = parseFloat(document.getElementById('as').value) || 0;
         const md = parseFloat(document.getElementById('md').value) || 0;
         const pr = parseFloat(document.getElementById('pr').value) || 0;
         const fn = parseFloat(document.getElementById('fn').value) || 0;
 
-        const attendanceMark = (Math.min(atPercent, 100) / 100) * 7;
-        const total = attendanceMark + qz + as + md + pr + fn;
+        const total = ((Math.min(at, 100) / 100) * 7) + qz + as + md + pr + fn;
         const bracket = Math.floor((total + 0.001) / 5);
         
-        let letterGrade = "";
-        let gp = 0.0;
-        let color = "transparent"; 
-        let textColor = "var(--ink)";
+        let letter = "F", gp = 0.0, color = "#8b0000";
 
-        switch(bracket) {
-            case 20: case 19: case 18: case 17: case 16:
-                letterGrade = "A+"; gp = 4.0; color = "#2d5a27"; textColor = "#fff"; break;
-            case 15:
-                letterGrade = "A"; gp = 3.75; color = "#3e7a3a"; textColor = "#fff"; break;
-            case 14:
-                letterGrade = "A-"; gp = 3.5; color = "#4f9b4d"; textColor = "#fff"; break;
-            case 13:
-                letterGrade = "B+"; gp = 3.25; color = "#2a4d69"; textColor = "#fff"; break;
-            case 12:
-                letterGrade = "B"; gp = 3.0; color = "#356284"; textColor = "#fff"; break;
-            case 11:
-                letterGrade = "B-"; gp = 2.75; color = "#4b86b4"; textColor = "#fff"; break;
-            case 10:
-                letterGrade = "C+"; gp = 2.5; color = "#6b4e71"; textColor = "#fff"; break;
-            case 9:
-                letterGrade = "C"; gp = 2.25; color = "#8d6a93"; textColor = "#fff"; break;
-            case 8:
-                letterGrade = "D"; gp = 2.0; color = "#a67c00"; textColor = "#fff"; break;
-            default:
-                letterGrade = "F"; gp = 0.0; color = "#8b0000"; textColor = "#fff";
-        }
+        const grades = {
+            16: ["A+", 4.0, "#2d5a27"], 15: ["A", 3.75, "#3e7a3a"], 
+            14: ["A-", 3.5, "#4f9b4d"], 13: ["B+", 3.25, "#2a4d69"],
+            12: ["B", 3.0, "#356284"], 11: ["B-", 2.75, "#4b86b4"],
+            10: ["C+", 2.5, "#6b4e71"], 9: ["C", 2.25, "#8d6a93"],
+            8: ["D", 2.0, "#a67c00"]
+        };
 
+        if (bracket >= 16) { [letter, gp, color] = grades[16]; }
+        else if (grades[bracket]) { [letter, gp, color] = grades[bracket]; }
+
+        currentGP = gp;
         document.getElementById('totalDisplay').innerText = total.toFixed(2);
-        document.getElementById('gradeDisplay').innerText = letterGrade;
+        document.getElementById('gradeDisplay').innerText = letter;
         document.getElementById('gpDisplay').innerText = "Grade Point: " + gp.toFixed(2);
         
-        const resultCard = document.getElementById('resultCard');
-        
-        if (letterGrade !== lastGrade) {
-            resultCard.classList.remove('stamped');
-            void resultCard.offsetWidth;
-            resultCard.classList.add('stamped');
-            lastGrade = letterGrade;
+        const card = document.getElementById('resultCard');
+        card.style.backgroundColor = color;
+        card.style.color = "#fff";
+    }
+
+    function saveCourse() {
+        const id = document.getElementById('courseID').value || "Unnamed";
+        const cr = parseFloat(document.getElementById('credit').value) || 0;
+
+        if (cr <= 0) {
+            alert("Please enter credits for the course.");
+            return;
         }
 
-        resultCard.style.backgroundColor = color;
-        resultCard.style.color = textColor;
+        savedCourses.push({ id, cr, gp: currentGP });
+        updateSummary();
+        resetInputs();
+    }
+
+    function deleteCourse(index) {
+        savedCourses.splice(index, 1);
+        updateSummary();
+    }
+
+    function updateSummary() {
+        const list = document.getElementById('courseList');
+        const summary = document.getElementById('summaryCard');
+        
+        if (savedCourses.length === 0) {
+            summary.style.display = "none";
+            return;
+        }
+
+        summary.style.display = "block";
+        list.innerHTML = "";
+
+        let totalPoints = 0;
+        let totalCr = 0;
+
+        savedCourses.forEach((c, index) => {
+            totalPoints += (c.gp * c.cr);
+            totalCr += c.cr;
+            list.innerHTML += `
+                <div class="course-item">
+                    <span><strong>${c.id}</strong> (${c.cr} Cr) — GP: ${c.gp.toFixed(2)}</span>
+                    <button class="del-btn" onclick="deleteCourse(${index})">&times;</button>
+                </div>`;
+        });
+
+        const cgpa = totalCr > 0 ? (totalPoints / totalCr) : 0;
+        document.getElementById('cgpaDisplay').innerText = "CGPA: " + cgpa.toFixed(2);
+    }
+
+    function resetInputs() {
+        ['courseID', 'credit', 'at', 'qz', 'as', 'md', 'pr', 'fn'].forEach(id => {
+            document.getElementById(id).value = "";
+        });
+        const card = document.getElementById('resultCard');
+        card.style.backgroundColor = "transparent";
+        card.style.color = "var(--ink)";
+        document.getElementById('gradeDisplay').innerText = "--";
+        document.getElementById('totalDisplay').innerText = "0.00";
+        document.getElementById('gpDisplay').innerText = "Grade Point: 0.00";
+        document.getElementById('courseID').focus();
     }
 </script>
-
 </body>
 </html>
-
