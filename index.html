@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #e8e2d2; 
+            --ink: #2c2c2c;
+            --border: #3d3d3d;
+        }
+
+        body { 
+            background-color: var(--bg); 
+            font-family: 'Merriweather', serif; 
+            color: var(--ink);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Prevents scrollbars during entrance animation */
+        }
+
+        /* Entrance animation for the whole document */
+        @keyframes paperSlide {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            border: 4px double var(--border);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.15);
+            position: relative;
+            animation: paperSlide 0.8s ease-out;
+        }
+
+        .container::before {
+            content: "By Shams Kabir (DIU_SWE_43)";
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            opacity: 0.6;
+        }
+
+        h1 { 
+            text-align: center; 
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .input-group { 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px; 
+            transition: transform 0.2s ease;
+        }
+
+        /* Hover effect for rows */
+        .input-group:hover {
+            transform: translateX(5px);
+        }
+
+        label { 
+            font-size: 0.8rem; 
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        input { 
+            width: 110px; 
+            padding: 8px; 
+            border: 1px solid var(--border); 
+            background: rgba(255, 255, 255, 0.2); 
+            color: var(--ink); 
+            font-family: 'Merriweather', serif;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: #000;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            transform: scale(1.05);
+        }
+
+        /* The Stamp Animation */
+        @keyframes stamp {
+            0% { transform: scale(1.3); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: background-color 0.6s ease, color 0.6s ease;
+        }
+
+        /* This class is toggled in JS to trigger the stamp animation */
+        .stamped {
+            animation: stamp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .grade-text { 
+            font-size: 2.8rem; 
+            font-weight: 700; 
+            margin: 5px 0;
+            line-height: 1;
+        }
+
+        .total-text, .gp-text { 
+            font-size: 0.85rem; 
+            margin: 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Grade Predictor</h1>
+
+    <div class="input-group">
+        <label>Attendance %</label>
+        <input type="number" id="at" placeholder="Max 100" data-next="qz" oninput="calculateGrade()">
+    </div>
+
+    <div class="input-group">
+        <label>Quiz Average</label>
+        <input type="number" id="qz" placeholder="Max 15" data-next="as" oninput="calculateGrade()">
+    </div>
+
+    <div class="input-group">
+        <label>Assignment</label>
+        <input type="number" id="as" placeholder="Max 5" data-next="md" oninput="calculateGrade()">
+    </div>
+
+    <div class="input-group">
+        <label>Midterm</label>
+        <input type="number" id="md" placeholder="Max 25" data-next="pr" oninput="calculateGrade()">
+    </div>
+
+    <div class="input-group">
+        <label>Presentation</label>
+        <input type="number" id="pr" placeholder="Max 8" data-next="fn" oninput="calculateGrade()">
+    </div>
+
+    <div class="input-group">
+        <label>Final Exam</label>
+        <input type="number" id="fn" placeholder="Max 40" oninput="calculateGrade()">
+    </div>
+
+    <div id="resultCard" class="result-box">
+        <p class="total-text">Total Score: <span id="totalDisplay">0.00</span></p>
+        <p class="grade-text" id="gradeDisplay">--</p>
+        <p class="gp-text" id="gpDisplay">Grade Point: 0.00</p>
+    </div>
+</div>
+
+<script>
+    // Enter key navigation
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            const currentElement = event.target;
+            const nextId = currentElement.getAttribute('data-next');
+            if (nextId) {
+                const nextElement = document.getElementById(nextId);
+                if (nextElement) nextElement.focus();
+            }
+        }
+    });
+
+    let lastGrade = "";
+
+    function calculateGrade() {
+        const atPercent = parseFloat(document.getElementById('at').value) || 0;
+        const qz = parseFloat(document.getElementById('qz').value) || 0;
+        const as = parseFloat(document.getElementById('as').value) || 0;
+        const md = parseFloat(document.getElementById('md').value) || 0;
+        const pr = parseFloat(document.getElementById('pr').value) || 0;
+        const fn = parseFloat(document.getElementById('fn').value) || 0;
+
+        const attendanceMark = (Math.min(atPercent, 100) / 100) * 7;
+        const total = attendanceMark + qz + as + md + pr + fn;
+        const bracket = Math.floor((total + 0.001) / 5);
+        
+        let letterGrade = "";
+        let gp = 0.0;
+        let color = "transparent"; 
+        let textColor = "var(--ink)";
+
+        switch(bracket) {
+            case 20: case 19: case 18: case 17: case 16:
+                letterGrade = "A+"; gp = 4.0; color = "#2d5a27"; textColor = "#fff"; break;
+            case 15:
+                letterGrade = "A"; gp = 3.75; color = "#3e7a3a"; textColor = "#fff"; break;
+            case 14:
+                letterGrade = "A-"; gp = 3.5; color = "#4f9b4d"; textColor = "#fff"; break;
+            case 13:
+                letterGrade = "B+"; gp = 3.25; color = "#2a4d69"; textColor = "#fff"; break;
+            case 12:
+                letterGrade = "B"; gp = 3.0; color = "#356284"; textColor = "#fff"; break;
+            case 11:
+                letterGrade = "B-"; gp = 2.75; color = "#4b86b4"; textColor = "#fff"; break;
+            case 10:
+                letterGrade = "C+"; gp = 2.5; color = "#6b4e71"; textColor = "#fff"; break;
+            case 9:
+                letterGrade = "C"; gp = 2.25; color = "#8d6a93"; textColor = "#fff"; break;
+            case 8:
+                letterGrade = "D"; gp = 2.0; color = "#a67c00"; textColor = "#fff"; break;
+            default:
+                letterGrade = "F"; gp = 0.0; color = "#8b0000"; textColor = "#fff";
+        }
+
+        document.getElementById('totalDisplay').innerText = total.toFixed(2);
+        document.getElementById('gradeDisplay').innerText = letterGrade;
+        document.getElementById('gpDisplay').innerText = "Grade Point: " + gp.toFixed(2);
+        
+        const resultCard = document.getElementById('resultCard');
+        
+        // Trigger Stamp Animation only if the letter grade changes
+        if (letterGrade !== lastGrade) {
+            resultCard.classList.remove('stamped');
+            void resultCard.offsetWidth; // Force reflow
+            resultCard.classList.add('stamped');
+            lastGrade = letterGrade;
+        }
+
+        resultCard.style.backgroundColor = color;
+        resultCard.style.color = textColor;
+    }
+</script>
+
+</body>
+</html>
