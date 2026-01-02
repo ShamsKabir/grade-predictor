@@ -2,7 +2,13 @@
 
 Transform your pre-exam anxiety into data-driven confidence! This is a sleek, academic-aesthetic web tool designed for students who want to calculate their grades with style. No more messy spreadsheets—just a clean, grid-paper interface that does the math for you.
 
-[🚀 Use App](https://shamskabir.github.io/grade-predictor/)
+---
+
+<p align="center">
+  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTNpNTlod2s4Nm1ia2ZnZjNsc2NrdDRocXB4dTlzZXZqbTR0anNkYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3orif1xSQnwOkYIRjO/giphy.gif">
+</p>
+
+## [👆🏼 Click Here](https://shamskabir.github.io/grade-predictor/)
 
 ---
 
@@ -48,12 +54,3 @@ The app uses a specific grading bracket to determine your success:
 
 ---
 
-## 🚀 Quick Start
-
-1.  **Clone** this repository.
-2.  Open `index.html` in any modern web browser.
-3.  Enter your **Course ID** and **Credits**.
-4.  Input your marks (**Attendance, Quizzes, Mid, etc.**).
-5.  Hit **Save Course** to add it to your current session summary!
-
----
