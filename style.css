@@ -1,0 +1,160 @@
+:root {
+            --bg: #e8e2d2; 
+            --ink: #2c2c2c;
+            --border: #3d3d3d;
+            --red: #8b0000;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        body { 
+            background-color: var(--bg); 
+            font-family: 'Merriweather', serif; 
+            color: var(--ink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px; 
+            box-sizing: border-box;
+        }
+
+        .container {
+            border: 4px double var(--border);
+            padding: 30px; 
+            width: 100%;
+            max-width: 400px; 
+            background: rgba(255, 255, 255, 0.15);
+            position: relative;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .container::after {
+            content: "By Shams Kabir (DIU_SWE_43)";
+            position: absolute; bottom: 3px; right: 3px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem; opacity: 0.6;
+        }
+
+        h1 { text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 30px; font-size: 1.2rem; }
+
+        .input-group { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; }
+        label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; flex: 1; }
+        input { width: 85px; padding: 6px; border: 1px solid var(--border); background: rgba(255, 255, 255, 0.2); font-family: 'Merriweather', serif; text-align: center; outline: none; }
+        
+        input:focus { background: rgba(255, 255, 255, 0.9); transform: scale(1.02); }
+
+        .btn-save {
+            width: 100%; padding: 12px; margin-top: 10px;
+            background: var(--ink); color: white;
+            border: none; font-family: 'JetBrains Mono';
+            cursor: pointer; text-transform: uppercase;
+            letter-spacing: 1px; font-weight: bold;
+        }
+
+        .result-box { margin-top: 15px; padding: 15px; border: 1px solid var(--border); text-align: center; }
+        .grade-text { font-size: 2rem; font-weight: 700; margin: 5px 0; }
+        .total-text, .gp-text { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; margin: 2px; }
+
+        .summary-container {
+            width: 100%; max-width: 400px;
+            background: #fff; border: 1px solid var(--border);
+            padding: 20px; box-sizing: border-box;
+            display: none;
+        }
+        .course-item { 
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.75rem; font-family: 'JetBrains Mono'; 
+            border-bottom: 1px dashed #ccc; padding: 8px 0;
+        }
+        .del-btn { 
+            color: var(--red); cursor: pointer; border: none; background: none; font-weight: bold; font-size: 1rem;
+        }
+        .cgpa-display {
+            margin-top: 15px; text-align: center;
+            font-size: 1.3rem; font-weight: bold;
+            color: #2a4d69; border-top: 2px solid var(--ink); padding-top: 10px;
+        }
+        #toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: var(--ink);
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 12px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 30px; opacity: 1; }
+        }
+
+        @keyframes fadeout {
+            from { bottom: 30px; opacity: 1; }
+            to { bottom: 0; opacity: 0; }
+        }
+
+        @media (min-width: 900px) {
+            body {
+                flex-direction: row; /* Side-by-side layout */
+                gap: 40px;
+                align-items: flex-start; /* Aligns them at the top */
+            }
+    
+            .container, .summary-container {
+                margin-top: 50px;
+            }
+        }
+
+        body { 
+    background-color: var(--bg); 
+    /* Adds a subtle radial gradient so the center is slightly lighter than the edges */
+    background: radial-gradient(circle, #f2eee3 0%, #e8e2d2 100%);
+    font-family: 'Merriweather', serif; 
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centers the app vertically on tall screens */
+    min-height: 100vh;
+    margin: 0;
+    padding: 40px 20px; 
+    box-sizing: border-box;
+}
+
+.container {
+    border: 4px double var(--border);
+    padding: 30px; 
+    width: 100%;
+    max-width: 400px; 
+    background: white; /* Solid background looks better on big screens */
+    position: relative;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    /* This shadow creates the "floating" effect */
+    box-shadow: 20px 20px 60px #d2cdc1, -20px -20px 60px #ffffff;
+}
