@@ -2,6 +2,8 @@
 
 Transform your pre-exam anxiety into data-driven confidence! This is a sleek, academic-aesthetic web tool designed for students who want to calculate their grades with style. No more messy spreadsheets—just a clean, grid-paper interface that does the math for you.
 
+[🚀 Use App](https://yourusername.github.io/your-repo-name/)
+
 ---
 
 ## ✨ Features
