@@ -3,8 +3,10 @@
     --ink: #2c2c2c;
     --border: #3d3d3d;
     --red: #8b0000;
+    --grid-line: rgba(61, 61, 61, 0.20);
 }
 
+/* Remove Arrows */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -17,26 +19,36 @@ input[type=number] {
 
 body {
     background-color: var(--bg);
+    /* COMBINED BACKGROUND: Lighting + Grid Lines */
+    background-image:
+        radial-gradient(circle, rgba(242, 238, 227, 0.8) 0%, rgba(232, 226, 210, 0.4) 100%),
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 100% 100%, 30px 30px, 30px 30px;
+
     font-family: 'Merriweather', serif;
     color: var(--ink);
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     min-height: 100vh;
     margin: 0;
-    padding: 20px;
+    padding: 40px 20px;
     box-sizing: border-box;
 }
 
-.container {
+.container,
+.summary-container {
+    background: #fff;
     border: 4px double var(--border);
     padding: 30px;
     width: 100%;
     max-width: 400px;
-    background: rgba(255, 255, 255, 0.15);
     position: relative;
     box-sizing: border-box;
     margin-bottom: 20px;
+    box-shadow: 20px 20px 60px #d2cdc1, -20px -20px 60px #ffffff;
 }
 
 .container::after {
@@ -49,6 +61,7 @@ body {
     opacity: 0.6;
 }
 
+/* Typography & Layout */
 h1 {
     text-align: center;
     text-transform: uppercase;
@@ -103,6 +116,7 @@ input:focus {
     font-weight: bold;
 }
 
+/* Result Box */
 .result-box {
     margin-top: 15px;
     padding: 15px;
@@ -124,6 +138,7 @@ input:focus {
     margin: 2px;
 }
 
+/* Summary Section */
 .summary-container {
     width: 100%;
     max-width: 400px;
@@ -132,6 +147,7 @@ input:focus {
     padding: 20px;
     box-sizing: border-box;
     display: none;
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .course-item {
@@ -163,6 +179,7 @@ input:focus {
     padding-top: 10px;
 }
 
+/* Toast Notification */
 #toast {
     visibility: hidden;
     min-width: 200px;
@@ -210,55 +227,22 @@ input:focus {
     }
 }
 
-@media (min-width: 900px) {
+/* Combined Big Screen Breakpoint */
+@media (min-width: 1024px) {
     body {
         flex-direction: row;
-        gap: 40px;
         align-items: flex-start;
+        gap: 50px;
+        padding-top: 80px;
     }
 
     .container,
     .summary-container {
-        margin-top: 50px;
+        margin-top: 0;
     }
 }
 
-body {
-    background-color: var(--bg);
-    background: radial-gradient(circle, #f2eee3 0%, #e8e2d2 100%);
-    font-family: 'Merriweather', serif;
-    color: var(--ink);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 40px 20px;
-    box-sizing: border-box;
-}
-
-.container {
-    border: 4px double var(--border);
-    padding: 30px;
-    width: 100%;
-    max-width: 400px;
-    background: white;
-    position: relative;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-    box-shadow: 20px 20px 60px #d2cdc1, -20px -20px 60px #ffffff;
-}
-
-@media (min-width: 900px) {
-    body {
-        flex-direction: row;
-        gap: 40px;
-        align-items: flex-start;
-    }
-
-    .container,
-    .summary-container {
-        margin-top: 50px;
-    }
+input:invalid {
+    border-color: var(--red);
+    background-color: rgba(139, 0, 0, 0.05);
 }
