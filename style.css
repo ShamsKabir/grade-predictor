@@ -6,7 +6,6 @@
     --grid-line: rgba(61, 61, 61, 0.20);
 }
 
-/* Remove Arrows */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -19,7 +18,6 @@ input[type=number] {
 
 body {
     background-color: var(--bg);
-    /* COMBINED BACKGROUND: Lighting + Grid Lines */
     background-image:
         radial-gradient(circle, rgba(242, 238, 227, 0.8) 0%, rgba(232, 226, 210, 0.4) 100%),
         linear-gradient(var(--grid-line) 1px, transparent 1px),
@@ -61,7 +59,6 @@ body {
     opacity: 0.6;
 }
 
-/* Typography & Layout */
 h1 {
     text-align: center;
     text-transform: uppercase;
@@ -116,7 +113,6 @@ input:focus {
     font-weight: bold;
 }
 
-/* Result Box */
 .result-box {
     margin-top: 15px;
     padding: 15px;
@@ -138,7 +134,6 @@ input:focus {
     margin: 2px;
 }
 
-/* Summary Section */
 .summary-container {
     width: 100%;
     max-width: 400px;
@@ -179,7 +174,6 @@ input:focus {
     padding-top: 10px;
 }
 
-/* Toast Notification */
 #toast {
     visibility: hidden;
     min-width: 200px;
@@ -227,7 +221,6 @@ input:focus {
     }
 }
 
-/* Combined Big Screen Breakpoint */
 @media (min-width: 1024px) {
     body {
         flex-direction: row;
@@ -245,4 +238,50 @@ input:focus {
 input:invalid {
     border-color: var(--red);
     background-color: rgba(139, 0, 0, 0.05);
+}
+
+@keyframes stamp {
+    0% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.stamped {
+    animation: stamp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.container,
+.summary-container {
+    animation: slideUp 0.6s ease-out;
+}
+
+.btn-save:hover {
+    background: #444;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+.del-btn:hover {
+    transform: scale(1.2);
+    color: #ff0000;
+    transition: transform 0.2s;
 }
