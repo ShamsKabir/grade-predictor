@@ -1,164 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grade Predictor & CGPA Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
+    <div id="toast">Course Saved!</div>
 
-<div id="toast">Course Saved!</div>
+    <div class="container">
+        <h1>Grade Predictor</h1>
 
-<div class="container">
-    <h1>Grade Predictor</h1>
+        <div class="input-group">
+            <label>Course ID</label><input type="text" placeholder="e.g., SE 101" id="courseID" data-next="credit" />
+        </div>
+        <div class="input-group">
+            <label>Credits</label>
+            <input type="number" placeholder="e.g., 3" id="credit" min="0" data-next="at" />
+        </div>
 
-    <div class="input-group"><label>Course ID</label><input type="text" placeholder="e.g., SE 101" id="courseID" data-next="credit"></div>
-    <div class="input-group"><label>Credits</label><input type="number" placeholder="Max 3" id="credit" data-next="at"></div>
+        <div class="input-group">
+            <label>Attendance %</label>
+            <input type="number" placeholder="Max 100" id="at" min="0" max="100" data-next="qz"
+                oninput="calculateGrade()" />
+        </div>
 
-    <div class="input-group"><label>Attendance %</label><input type="number" placeholder="Max 100" id="at" data-next="qz" oninput="calculateGrade()"></div>
-    <div class="input-group"><label>Quiz Avg</label><input type="number" placeholder="Max 15" id="qz" data-next="as" oninput="calculateGrade()"></div>
-    <div class="input-group"><label>Assignment</label><input type="number" placeholder="Max 5" id="as" data-next="md" oninput="calculateGrade()"></div>
-    <div class="input-group"><label>Midterm</label><input type="number" placeholder="Max 25" id="md" data-next="pr" oninput="calculateGrade()"></div>
-    <div class="input-group"><label>Presentation</label><input type="number" placeholder="Max 8" id="pr" data-next="fn" oninput="calculateGrade()"></div>
-    <div class="input-group"><label>Final Exam</label><input type="number" placeholder="Max 40" id="fn" oninput="calculateGrade()"></div>
+        <div class="input-group">
+            <label>Quiz Avg</label>
+            <input type="number" placeholder="Max 15" id="qz" min="0" max="15" data-next="as"
+                oninput="calculateGrade()" />
+        </div>
 
-    <div id="resultCard" class="result-box">
-        <p class="total-text">Total Score: <span id="totalDisplay">0.00</span></p>
-        <p class="grade-text" id="gradeDisplay">--</p>
-        <p class="gp-text" id="gpDisplay">Grade Point: 0.00</p>
+        <div class="input-group">
+            <label>Assignment</label>
+            <input type="number" placeholder="Max 5" id="as" min="0" max="5" data-next="md"
+                oninput="calculateGrade()" />
+        </div>
+
+        <div class="input-group">
+            <label>Midterm</label>
+            <input type="number" placeholder="Max 25" id="md" min="0" max="25" data-next="pr"
+                oninput="calculateGrade()" />
+        </div>
+
+        <div class="input-group">
+            <label>Presentation</label>
+            <input type="number" placeholder="Max 8" id="pr" min="0" max="8" data-next="fn"
+                oninput="calculateGrade()" />
+        </div>
+
+        <div class="input-group">
+            <label>Final Exam</label>
+            <input type="number" placeholder="Max 40" id="fn" min="0" max="40" oninput="calculateGrade()" />
+        </div>
+
+        <div id="resultCard" class="result-box">
+            <p class="total-text">
+                Total Score: <span id="totalDisplay">0.00</span>
+            </p>
+            <p class="grade-text" id="gradeDisplay">--</p>
+            <p class="gp-text" id="gpDisplay">Grade Point: 0.00</p>
+        </div>
+
+        <button class="btn-save" onclick="saveCourse()">Save Course</button>
     </div>
 
-    <button class="btn-save" onclick="saveCourse()">Save Course</button>
-</div>
+    <div id="summaryCard" class="summary-container">
+        <h3 style="text-align: center; margin-top: 0; font-size: 1rem">
+            SESSION SUMMARY
+        </h3>
+        <div id="courseList"></div>
+        <div class="cgpa-display" id="cgpaDisplay">CGPA: 0.00</div>
+        <button onclick="location.reload()" style="
+          width: 100%;
+          margin-top: 15px;
+          font-size: 0.7rem;
+          cursor: pointer;
+          padding: 5px;
+        ">
+            Clear Session
+        </button>
+    </div>
 
-<div id="summaryCard" class="summary-container">
-    <h3 style="text-align:center; margin-top:0; font-size: 1rem;">SESSION SUMMARY</h3>
-    <div id="courseList"></div>
-    <div class="cgpa-display" id="cgpaDisplay">CGPA: 0.00</div>
-    <button onclick="location.reload()" style="width:100%; margin-top:15px; font-size:0.7rem; cursor:pointer; padding: 5px;">Clear Session</button>
-</div>
+    <script>
+        let savedCourses = [];
+        let currentGP = 0;
 
-<script>
-    let savedCourses = [];
-    let currentGP = 0;
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                const nextId = event.target.getAttribute("data-next");
+                if (nextId) document.getElementById(nextId).focus();
+            }
+        });
 
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            const nextId = event.target.getAttribute('data-next');
-            if (nextId) document.getElementById(nextId).focus();
+        function calculateGrade() {
+            const isInvalid = (id, max) => {
+                const val = parseFloat(document.getElementById(id).value);
+                // If the field is empty, we treat it as 0 (not invalid)
+                if (isNaN(val)) return false;
+                // If the value is below 0 or above the max, it is invalid
+                return val < 0 || val > max;
+            };
+
+            // Define the limits for each field
+            const limits = {
+                at: 100, qz: 15, as: 5, md: 25, pr: 8, fn: 40
+            };
+
+            // Check all fields for invalid input
+            let hasError = false;
+            for (const [id, max] of Object.entries(limits)) {
+                if (isInvalid(id, max)) {
+                    hasError = true;
+                    break;
+                }
+            }
+
+            const resultCard = document.getElementById("resultCard");
+
+            if (hasError) {
+                // Stop calculation and show error state
+                document.getElementById("totalDisplay").innerText = "ERR";
+                document.getElementById("gradeDisplay").innerText = "INVALID";
+                document.getElementById("gpDisplay").innerText = "Check Input Limits";
+
+                resultCard.style.backgroundColor = "var(--red)";
+                resultCard.style.color = "#fff";
+                currentGP = 0; // Prevent saving invalid data
+                return; // Exit the function early
+            }
+
+            // If valid, proceed with normal calculation
+            const at = parseFloat(document.getElementById("at").value) || 0;
+            const qz = parseFloat(document.getElementById("qz").value) || 0;
+            const as = parseFloat(document.getElementById("as").value) || 0;
+            const md = parseFloat(document.getElementById("md").value) || 0;
+            const pr = parseFloat(document.getElementById("pr").value) || 0;
+            const fn = parseFloat(document.getElementById("fn").value) || 0;
+
+            const total = (Math.min(at, 100) / 100) * 7 + qz + as + md + pr + fn;
+            const bracket = Math.floor((total + 0.001) / 5);
+
+            let letter = "F", gp = 0.0, color = "var(--red)";
+
+            const grades = {
+                16: ["A+", 4.0, "#2d5a27"], 15: ["A", 3.75, "#3e7a3a"],
+                14: ["A-", 3.5, "#4f9b4d"], 13: ["B+", 3.25, "#2a4d69"],
+                12: ["B", 3.0, "#356284"], 11: ["B-", 2.75, "#4b86b4"],
+                10: ["C+", 2.5, "#6b4e71"], 9: ["C", 2.25, "#8d6a93"],
+                8: ["D", 2.0, "#a67c00"],
+            };
+
+            if (bracket >= 16) {
+                [letter, gp, color] = grades[16];
+            } else if (grades[bracket]) {
+                [letter, gp, color] = grades[bracket];
+            }
+
+            currentGP = gp;
+            document.getElementById("totalDisplay").innerText = total.toFixed(2);
+            document.getElementById("gradeDisplay").innerText = letter;
+            document.getElementById("gpDisplay").innerText = "Grade Point: " + gp.toFixed(2);
+
+            resultCard.style.backgroundColor = color;
+            resultCard.style.color = "#fff";
         }
-    });
 
-    function calculateGrade() {
-        const at = parseFloat(document.getElementById('at').value) || 0;
-        const qz = parseFloat(document.getElementById('qz').value) || 0;
-        const as = parseFloat(document.getElementById('as').value) || 0;
-        const md = parseFloat(document.getElementById('md').value) || 0;
-        const pr = parseFloat(document.getElementById('pr').value) || 0;
-        const fn = parseFloat(document.getElementById('fn').value) || 0;
+        function saveCourse() {
+            const id = document.getElementById("courseID").value || "Unnamed";
+            const cr = parseFloat(document.getElementById("credit").value) || 0;
 
-        const total = ((Math.min(at, 100) / 100) * 7) + qz + as + md + pr + fn;
-        const bracket = Math.floor((total + 0.001) / 5);
-        
-        let letter = "F", gp = 0.0, color = "#8b0000";
+            if (cr <= 0) {
+                alert("Please enter credits for the course.");
+                return;
+            }
 
-        const grades = {
-            16: ["A+", 4.0, "#2d5a27"], 15: ["A", 3.75, "#3e7a3a"], 
-            14: ["A-", 3.5, "#4f9b4d"], 13: ["B+", 3.25, "#2a4d69"],
-            12: ["B", 3.0, "#356284"], 11: ["B-", 2.75, "#4b86b4"],
-            10: ["C+", 2.5, "#6b4e71"], 9: ["C", 2.25, "#8d6a93"],
-            8: ["D", 2.0, "#a67c00"]
-        };
+            savedCourses.push({ id, cr, gp: currentGP });
+            updateSummary();
+            resetInputs();
 
-        if (bracket >= 16) { [letter, gp, color] = grades[16]; }
-        else if (grades[bracket]) { [letter, gp, color] = grades[bracket]; }
-
-        currentGP = gp;
-        document.getElementById('totalDisplay').innerText = total.toFixed(2);
-        document.getElementById('gradeDisplay').innerText = letter;
-        document.getElementById('gpDisplay').innerText = "Grade Point: " + gp.toFixed(2);
-        
-        const card = document.getElementById('resultCard');
-        card.style.backgroundColor = color;
-        card.style.color = "#fff";
-    }
-
-    function saveCourse() {
-        const id = document.getElementById('courseID').value || "Unnamed";
-        const cr = parseFloat(document.getElementById('credit').value) || 0;
-
-        if (cr <= 0) {
-            alert("Please enter credits for the course.");
-            return;
+            showToast(`${id} added to session!`);
         }
 
-        savedCourses.push({ id, cr, gp: currentGP });
-        updateSummary();
-        resetInputs();
-    
-        showToast(`${id} added to session!`);
-    }
-
-    function deleteCourse(index) {
-        savedCourses.splice(index, 1);
-        updateSummary();
-    }
-
-    function updateSummary() {
-        const list = document.getElementById('courseList');
-        const summary = document.getElementById('summaryCard');
-        
-        if (savedCourses.length === 0) {
-            summary.style.display = "none";
-            return;
+        function deleteCourse(index) {
+            savedCourses.splice(index, 1);
+            updateSummary();
         }
 
-        summary.style.display = "block";
-        list.innerHTML = "";
+        function updateSummary() {
+            const list = document.getElementById("courseList");
+            const summary = document.getElementById("summaryCard");
 
-        let totalPoints = 0;
-        let totalCr = 0;
+            if (savedCourses.length === 0) {
+                summary.style.display = "none";
+                return;
+            }
 
-        savedCourses.forEach((c, index) => {
-            totalPoints += (c.gp * c.cr);
-            totalCr += c.cr;
-            list.innerHTML += `
+            summary.style.display = "block";
+            list.innerHTML = "";
+
+            let totalPoints = 0;
+            let totalCr = 0;
+
+            savedCourses.forEach((c, index) => {
+                totalPoints += c.gp * c.cr;
+                totalCr += c.cr;
+                list.innerHTML += `
                 <div class="course-item">
-                    <span><strong>${c.id}</strong> (${c.cr} Cr) — GP: ${c.gp.toFixed(2)}</span>
+                    <span><strong>${c.id}</strong> (${c.cr
+                    } Cr) — GP: ${c.gp.toFixed(2)}</span>
                     <button class="del-btn" onclick="deleteCourse(${index})">&times;</button>
                 </div>`;
-        });
+            });
 
-        const cgpa = totalCr > 0 ? (totalPoints / totalCr) : 0;
-        document.getElementById('cgpaDisplay').innerText = "CGPA: " + cgpa.toFixed(2);
-    }
+            const cgpa = totalCr > 0 ? totalPoints / totalCr : 0;
+            document.getElementById("cgpaDisplay").innerText =
+                "CGPA: " + cgpa.toFixed(2);
+        }
 
-    function resetInputs() {
-        ['courseID', 'credit', 'at', 'qz', 'as', 'md', 'pr', 'fn'].forEach(id => {
-            document.getElementById(id).value = "";
-        });
-        const card = document.getElementById('resultCard');
-        card.style.backgroundColor = "transparent";
-        card.style.color = "var(--ink)";
-        document.getElementById('gradeDisplay').innerText = "--";
-        document.getElementById('totalDisplay').innerText = "0.00";
-        document.getElementById('gpDisplay').innerText = "Grade Point: 0.00";
-        document.getElementById('courseID').focus();
-    }
+        function resetInputs() {
+            ["courseID", "credit", "at", "qz", "as", "md", "pr", "fn"].forEach(
+                (id) => {
+                    document.getElementById(id).value = "";
+                }
+            );
+            const card = document.getElementById("resultCard");
+            card.style.backgroundColor = "transparent";
+            card.style.color = "var(--ink)";
+            document.getElementById("gradeDisplay").innerText = "--";
+            document.getElementById("totalDisplay").innerText = "0.00";
+            document.getElementById("gpDisplay").innerText = "Grade Point: 0.00";
+            document.getElementById("courseID").focus();
+        }
 
-    function showToast(message) {
-        const toast = document.getElementById("toast");
-        toast.innerText = message;
-        toast.className = "show";
-    
-        setTimeout(function() { 
-            toast.className = toast.className.replace("show", ""); 
-        }, 3000);
-}
-</script>
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.className = "show";
+
+            setTimeout(function () {
+                toast.className = toast.className.replace("show", "");
+            }, 3000);
+        }
+    </script>
 </body>
+
 </html>
