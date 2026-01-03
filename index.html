@@ -11,6 +11,16 @@
 </head>
 
 <body>
+
+    <div id="welcomeScreen" class="splash-overlay">
+        <div class="splash-content">
+            <h1 class="splash-title">Grade Predictor</h1>
+            <p class="splash-subtitle">Powered by DIU Handbook 2025 for Department of SWE</p>
+            <div class="loader"></div>
+            <p class="creator-tag">Developed by Shams Kabir</p>
+        </div>
+    </div>
+
     <div id="toast">Course Saved!</div>
 
     <div class="container">
@@ -92,6 +102,14 @@
         let savedCourses = [];
         let currentGP = 0;
         let courseDatabase = {};
+
+        function hideWelcomeScreen() {
+            const welcome = document.getElementById("welcomeScreen");
+            setTimeout(() => {
+                welcome.classList.add("hidden");
+            }, 2500);
+        }
+        hideWelcomeScreen();
 
         async function loadCourseData() {
             try {
@@ -259,4 +277,3 @@
 </body>
 
 </html>
-
