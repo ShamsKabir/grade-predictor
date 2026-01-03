@@ -91,6 +91,29 @@
         let lastGrade = "";
         let savedCourses = [];
         let currentGP = 0;
+        let courseDatabase = {};
+
+        async function loadCourseData() {
+            try {
+                const response = await fetch('courses.json');
+                courseDatabase = await response.json();
+                console.log("Handbook data loaded.");
+            } catch (err) {
+                console.error("Error: Could not load handbook data. Ensure you are using a server.", err);
+            }
+        }
+        loadCourseData();
+
+        document.getElementById("courseID").addEventListener("input", function () {
+            const inputCode = this.value.toUpperCase().trim();
+            const creditInput = document.getElementById("credit");
+
+            if (courseDatabase[inputCode]) {
+                creditInput.value = courseDatabase[inputCode].credits;
+                creditInput.style.boxShadow = "0 0 10px rgba(0, 128, 0, 0.3)";
+                setTimeout(() => creditInput.style.boxShadow = "none", 1000);
+            }
+        });
 
         document.addEventListener("keydown", function (event) {
             if (event.key === "Enter") {
@@ -107,7 +130,6 @@
             };
 
             const limits = { at: 100, qz: 15, as: 5, md: 25, pr: 8, fn: 40 };
-
             let hasError = false;
             for (const [id, max] of Object.entries(limits)) {
                 if (isInvalid(id, max)) {
@@ -117,7 +139,6 @@
             }
 
             const resultCard = document.getElementById("resultCard");
-
             if (hasError) {
                 document.getElementById("totalDisplay").innerText = "ERR";
                 document.getElementById("gradeDisplay").innerText = "INVALID";
@@ -139,7 +160,6 @@
             const bracket = Math.floor((total + 0.001) / 5);
 
             let letter = "F", gp = 0.0, color = "var(--red)";
-
             const grades = {
                 16: ["A+", 4.0, "#2d5a27"], 15: ["A", 3.75, "#3e7a3a"],
                 14: ["A-", 3.5, "#4f9b4d"], 13: ["B+", 3.25, "#2a4d69"],
@@ -179,7 +199,6 @@
             savedCourses.push({ id, cr, gp: currentGP });
             updateSummary();
             resetInputs();
-
             showToast(`${id} added to session!`);
         }
 
@@ -207,23 +226,19 @@
                 totalPoints += c.gp * c.cr;
                 totalCr += c.cr;
                 list.innerHTML += `
-                <div class="course-item">
-                    <span><strong>${c.id}</strong> (${c.cr
-                    } Cr) — GP: ${c.gp.toFixed(2)}</span>
-                    <button class="del-btn" onclick="deleteCourse(${index})">&times;</button>
-                </div>`;
+                    <div class="course-item">
+                        <span><strong>${c.id}</strong> (${c.cr} Cr) — GP: ${c.gp.toFixed(2)}</span>
+                        <button class="del-btn" onclick="deleteCourse(${index})">&times;</button>
+                    </div>`;
             });
 
             const cgpa = totalCr > 0 ? totalPoints / totalCr : 0;
-            document.getElementById("cgpaDisplay").innerText =
-                "CGPA: " + cgpa.toFixed(2);
+            document.getElementById("cgpaDisplay").innerText = "CGPA: " + cgpa.toFixed(2);
         }
 
         function resetInputs() {
             ["courseID", "credit", "at", "qz", "as", "md", "pr", "fn"].forEach(
-                (id) => {
-                    document.getElementById(id).value = "";
-                }
+                (id) => { document.getElementById(id).value = ""; }
             );
             const card = document.getElementById("resultCard");
             card.style.backgroundColor = "transparent";
@@ -238,10 +253,7 @@
             const toast = document.getElementById("toast");
             toast.innerText = message;
             toast.className = "show";
-
-            setTimeout(function () {
-                toast.className = toast.className.replace("show", "");
-            }, 3000);
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
         }
     </script>
 </body>
