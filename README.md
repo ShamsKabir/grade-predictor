@@ -1,6 +1,8 @@
 # 🎓 Grade Predictor & CGPA Tracker
 
-Transform your pre-exam anxiety into data-driven confidence! This is a sleek, academic-aesthetic web tool designed for students who want to calculate their grades with style. No more messy spreadsheets—just a clean, grid-paper interface that does the math for you.
+A **minimal, elegant, and accurate Grade Predictor & CGPA Tracker** built using **HTML, CSS, and Vanilla JavaScript**, powered by the **DIU SWE Handbook 2025**.  
+
+This tool helps Software Engineering students **predict grades**, **calculate grade points**, and **track CGPA in a single session** — all without any backend.
 
 ---
 
@@ -14,43 +16,126 @@ Transform your pre-exam anxiety into data-driven confidence! This is a sleek, ac
 
 ## ✨ Features
 
-* **Real-time Calculations**: Watch your grade point and letter grade update instantly as you type.
-* **Intelligent Validation**: Built-in logic stops calculations and flags "ERR" if you enter marks above allowed limits (e.g., more than 40 in a Final Exam).
-* **Session Summary**: Save multiple courses to a summary card to calculate your semester CGPA on the fly.
-* **Premium UX**: Featuring a satisfying "Stamp" animation when your grade changes and a smooth "Slide-up" entrance for all cards.
-* **Academic Aesthetic**: A beautiful "Drafting Paper" background with professional serif typography.
-* **Responsive Layout**: Seamlessly switches from a vertical mobile view to a side-by-side desktop dashboard for larger screens.
+- 📘 **Handbook-based course credits**
+  - Automatically fetches course credits from `courses.json`
+    
+- 🧮 **Real-time grade calculation**
+  - Attendance, Quiz, Assignment, Midterm, Presentation & Final
+    
+- 🎯 **Accurate grade & grade point mapping**
+  - Follows DIU grading policy
+    
+- 📊 **Session-based CGPA tracking**
+  - Add multiple courses and instantly see CGPA
+    
+- 🗑️ **Remove courses dynamically**
+  
+- ⌨️ **Keyboard-friendly input flow**
+  - Press `Enter` to jump to the next field
+    
+- 🎨 **Clean retro academic UI**
+  - Grid background, animations, splash screen
+    
+- 🚫 **Input validation**
+  - Prevents invalid marks and credit errors
 
 ---
 
-## 🛠️ Built With
+## 🛠️ Tech Stack
 
-* **HTML5**: Semantic structure for the best accessibility.
-* **CSS3**: Custom Flexbox layouts, complex gradients for the grid pattern, and `cubic-bezier` animations.
-* **Vanilla JavaScript**: Lightweight logic for grading brackets and CGPA mathematics—no heavy frameworks required.
+- **HTML5** – Structure  
+- **CSS3** – Styling & animations  
+- **JavaScript (Vanilla)** – Logic & interactivity  
+- **JSON** – Course & credit data  
 
-
-
----
-
-## 📝 How It Works
-
-The app uses a specific grading bracket to determine your success:
-
-| Total Score | Grade | GP |
-| :--- | :--- | :--- |
-| 80+ | A+ | 4.00 |
-| 75-79 | A | 3.75 |
-| 70-74 | A- | 3.50 |
-| 65-69 | B+ | 3.25 |
-| 60-64 | B | 3.00 |
-| 55-59 | B- | 2.75 |
-| 50-54 | C+ | 2.50 |
-| 45-49 | C | 2.25 |
-| 40-44 | D | 2.00 |
-| < 40 | F | 0.00 |
-
-*Note: Calculations include a `0.001` buffer to ensure fair rounding at the bracket edges.*
+No frameworks. No dependencies. No backend.
 
 ---
 
+## 📂 Project Structure
+
+```
+📦 Grade-Predictor
+├── index.html
+├── style.css
+├── courses.json
+└── README.md
+```
+
+---
+
+## 🚀 How to Run the Project
+
+> ⚠️ **Important:** This project requires **all three files** (`index.html`, `style.css`, and `courses.json`) to be present in the same directory.  
+Removing or renaming any of them will break the application.
+
+
+### Option 1: Using VS Code
+1. Install **Live Server**
+2. Right-click `index.html`
+3. Click **Open with Live Server**
+
+### Option 2: Using Python
+```bash
+python -m http.server
+```
+
+Then open:
+```
+http://localhost:8000
+```
+
+---
+
+## 🧠 Grade Calculation Logic
+
+### Total Marks Breakdown (100)
+
+| Component       | Max Marks |
+|-----------------|-----------|
+| Attendance      | 7         |
+| Quiz            | 15        |
+| Assignment      | 5         |
+| Midterm         | 25        |
+| Presentation    | 8         |
+| Final Exam      | 40        |
+| **Total**       | **100**   |
+
+---
+
+### Grade Mapping
+
+| Marks Range | Grade | GP   |
+|------------|-------|------|
+| 80+        | A+    | 4.00 |
+| 75–79     | A     | 3.75 |
+| 70–74     | A−    | 3.50 |
+| 65–69     | B+    | 3.25 |
+| 60–64     | B     | 3.00 |
+| 55–59     | B−    | 2.75 |
+| 50–54     | C+    | 2.50 |
+| 45–49     | C     | 2.25 |
+| 40–44     | D     | 2.00 |
+| < 40      | F     | 0.00 |
+
+---
+
+## 📈 CGPA Formula Used
+
+```
+CGPA = Σ (Credit × Grade Point) / Σ Credits
+```
+
+---
+
+## 🧪 Data Source
+
+- **DIU SWE Handbook 2025**
+- Stored locally in `courses.json`
+
+---
+
+## 👨‍💻 Developer
+
+**Shams Kabir**  
+Software Engineering, DIU
