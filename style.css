@@ -317,39 +317,44 @@ input:invalid {
     margin-bottom: 20px;
 }
 
-.loader {
-    width: 40px;
-    height: 40px;
-    border: 4px solid var(--grid-line);
-    border-top: 4px solid var(--red);
-    border-radius: 50%;
-    margin: 0 auto 20px;
-    animation: spin 1s linear infinite;
-}
-
 .splash-overlay.hidden {
     opacity: 0;
     visibility: hidden;
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
+.sync-loader {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 30px auto;
 }
 
-@keyframes scaleUp {
-    from {
-        transform: scale(0.8);
-        opacity: 0;
+.square {
+    width: 18px;
+    height: 18px;
+    background-color: var(--red);
+    animation: sync 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.square:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.square:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+@keyframes sync {
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.3;
     }
 
-    to {
-        transform: scale(1);
+    50% {
+        transform: scale(1.5) rotate(90deg);
         opacity: 1;
+        border-radius: 50%;
     }
 }
