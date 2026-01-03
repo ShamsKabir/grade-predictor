@@ -8,7 +8,7 @@ Transform your pre-exam anxiety into data-driven confidence! This is a sleek, ac
   <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTNpNTlod2s4Nm1ia2ZnZjNsc2NrdDRocXB4dTlzZXZqbTR0anNkYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3orif1xSQnwOkYIRjO/giphy.gif">
 </p>
 
-## [👆🏼 Click Here](https://shamskabir.github.io/grade-predictor/)
+## [👆🏼 Click here to use the app](https://shamskabir.github.io/grade-predictor/)
 
 ---
 
