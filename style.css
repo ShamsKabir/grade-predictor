@@ -285,3 +285,71 @@ input:invalid {
     color: #ff0000;
     transition: transform 0.2s;
 }
+
+.splash-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s;
+}
+
+.splash-content {
+    text-align: center;
+    animation: scaleUp 0.5s ease-out;
+}
+
+.splash-title {
+    font-size: 2.5rem;
+    color: var(--red);
+    margin-bottom: 5px;
+}
+
+.splash-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.loader {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--grid-line);
+    border-top: 4px solid var(--red);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    animation: spin 1s linear infinite;
+}
+
+.splash-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes scaleUp {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
