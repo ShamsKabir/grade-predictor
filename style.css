@@ -19,11 +19,7 @@ input[type=number] {
 body {
     background-color: var(--bg);
     background-image:
-        radial-gradient(circle, rgba(242, 238, 227, 0.8) 0%, rgba(232, 226, 210, 0.4) 100%),
-        linear-gradient(var(--grid-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 100% 100%, 30px 30px, 30px 30px;
-
+        radial-gradient(circle, rgba(242, 238, 227, 0.8) 0%, rgba(232, 226, 210, 0.4) 100%);
     font-family: 'Merriweather', serif;
     color: var(--ink);
     display: flex;
@@ -34,6 +30,23 @@ body {
     margin: 0;
     padding: 40px 20px;
     box-sizing: border-box;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 30px 30px, 30px 30px;
+    animation: gridMove 3s linear infinite;
+    pointer-events: none;
+    z-index: -1;
 }
 
 .container,
@@ -63,10 +76,11 @@ h1 {
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 2px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
     padding-bottom: 15px;
     margin-bottom: 30px;
     font-size: 1.2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
 }
 
 .input-group {
@@ -78,7 +92,7 @@ h1 {
 }
 
 label {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     font-weight: 700;
     text-transform: uppercase;
     flex: 1;
@@ -88,15 +102,17 @@ input {
     width: 85px;
     padding: 6px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.2);
+    background: #fafafa;
     font-family: 'Merriweather', serif;
     text-align: center;
     outline: none;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 input:focus {
-    background: rgba(255, 255, 255, 0.9);
+    background: #fafafa;
     transform: scale(1.02);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn-save {
@@ -118,6 +134,8 @@ input:focus {
     padding: 15px;
     border: 1px solid var(--border);
     text-align: center;
+    background: #fafafa;
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .grade-text {
@@ -240,6 +258,10 @@ input:invalid {
     background-color: rgba(139, 0, 0, 0.05);
 }
 
+input:disabled {
+    cursor: not-allowed;
+}
+
 @keyframes stamp {
     0% {
         transform: scale(1.5);
@@ -286,75 +308,18 @@ input:invalid {
     transition: transform 0.2s;
 }
 
-.splash-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--bg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    transition: opacity 0.8s ease, visibility 0.8s;
-}
 
-.splash-content {
-    text-align: center;
-    animation: scaleUp 0.5s ease-out;
-}
 
-.splash-title {
-    font-size: 2.5rem;
-    color: var(--red);
-    margin-bottom: 5px;
-}
-
-.splash-subtitle {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-}
-
-.splash-overlay.hidden {
-    opacity: 0;
-    visibility: hidden;
-}
-
-.sync-loader {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin: 30px auto;
-}
-
-.square {
-    width: 18px;
-    height: 18px;
-    background-color: var(--red);
-    animation: sync 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-}
-
-.square:nth-child(2) {
-    animation-delay: 0.1s;
-}
-
-.square:nth-child(3) {
-    animation-delay: 0.2s;
-}
-
-@keyframes sync {
-
-    0%,
-    100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 0.3;
+@keyframes gridMove {
+    0% {
+        background-position: 0 0, 0 0, 0 0;
     }
 
     50% {
-        transform: scale(1.5) rotate(90deg);
-        opacity: 1;
-        border-radius: 50%;
+        background-position: 0 0, 15px 15px, 15px 15px;
+    }
+
+    100% {
+        background-position: 0 0, 30px 30px, 30px 30px;
     }
 }

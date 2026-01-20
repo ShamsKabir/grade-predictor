@@ -12,18 +12,6 @@
 
 <body>
 
-    <div id="welcomeScreen" class="splash-overlay">
-        <div class="splash-content">
-            <h1 class="splash-title">Grade Predictor</h1>
-            <p class="splash-subtitle">Powered by DIU Handbook 2025 for Department of SWE</p>
-            <div class="sync-loader">
-                <div class="square"></div>
-                <div class="square"></div>
-                <div class="square"></div>
-            </div>
-            <p class="creator-tag">Developed by Shams Kabir</p>
-        </div>
-    </div>
 
     <div id="toast">Course Saved!</div>
 
@@ -107,13 +95,6 @@
         let currentGP = 0;
         let courseDatabase = {};
 
-        function hideWelcomeScreen() {
-            const welcome = document.getElementById("welcomeScreen");
-            setTimeout(() => {
-                welcome.classList.add("hidden");
-            }, 2500);
-        }
-        hideWelcomeScreen();
 
         async function loadCourseData() {
             try {
@@ -132,15 +113,31 @@
 
             if (courseDatabase[inputCode]) {
                 creditInput.value = courseDatabase[inputCode].credits;
+                creditInput.disabled = true;
                 creditInput.style.boxShadow = "0 0 10px rgba(0, 128, 0, 0.3)";
-                setTimeout(() => creditInput.style.boxShadow = "none", 1000);
+                setTimeout(() => creditInput.style.boxShadow = "", 1000);
+            } else {
+                creditInput.disabled = false;
+                creditInput.value = "";
             }
         });
 
         document.addEventListener("keydown", function (event) {
             if (event.key === "Enter") {
-                const nextId = event.target.getAttribute("data-next");
+                let nextId = event.target.getAttribute("data-next");
+
+                // If coming from courseID and credit is disabled, skip to attendance
+                if (event.target.id === "courseID" && document.getElementById("credit").disabled) {
+                    nextId = "at";
+                }
+
                 if (nextId) document.getElementById(nextId).focus();
+            } else if (event.key === "Escape") {
+                // Clear all entries
+                savedCourses = [];
+                resetInputs();
+                updateSummary();
+                showToast("All entries cleared!");
             }
         });
 
@@ -260,7 +257,11 @@
 
         function resetInputs() {
             ["courseID", "credit", "at", "qz", "as", "md", "pr", "fn"].forEach(
-                (id) => { document.getElementById(id).value = ""; }
+                (id) => {
+                    const element = document.getElementById(id);
+                    element.value = "";
+                    if (id === "credit") element.disabled = false;
+                }
             );
             const card = document.getElementById("resultCard");
             card.style.backgroundColor = "transparent";
